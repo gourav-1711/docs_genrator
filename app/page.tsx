@@ -6,6 +6,7 @@ import LetterPreview from "./components/LetterPreview";
 import BillCreator from "./components/BillCreator";
 import { JobLetterData, defaultFormData, BillData, defaultBillData } from "./types";
 import { generateJobLetterPDF, generateBillPDF } from "./utils/generatePDF";
+import { Briefcase, Receipt, Sparkles } from "lucide-react";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState<"job" | "bill">("job");
@@ -31,78 +32,71 @@ export default function Home() {
 
   return (
     <div className="app-container">
-      {/* Header with Navigation */}
       <header className="app-header">
         <div className="header-content">
-          <div className="logo">
-            <span className="logo-icon">📄</span>
-            <h1>{activeSection === "job" ? "Job Letter Creator" : "Bill Creator"}</h1>
+          <div className="flex justify-center mb-4">
+            <div className="p-3 bg-amber-500/20 rounded-2xl border border-amber-500/30">
+              <Sparkles className="text-amber-400" size={32} />
+            </div>
           </div>
-          <nav className="main-nav" style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <div className="logo">
+            <h1>Jewellery Wala Tools</h1>
+          </div>
+          <p className="text-slate-400 mt-2 font-medium">Professional Document Creator</p>
+          
+          <nav className="tab-nav mt-8 max-w-md mx-auto">
             <button 
-              className={`btn ${activeSection === "job" ? "btn-primary" : "btn-secondary"}`}
+              className={`tab-nav-btn ${activeSection === "job" ? "active" : ""}`}
               onClick={() => setActiveSection("job")}
             >
-              💼 Job Letter
+              <div className="flex items-center justify-center gap-2">
+                <Briefcase size={18} />
+                Job Letter
+              </div>
             </button>
             <button 
-              className={`btn ${activeSection === "bill" ? "btn-primary" : "btn-secondary"}`}
+              className={`tab-nav-btn ${activeSection === "bill" ? "active" : ""}`}
               onClick={() => setActiveSection("bill")}
             >
-              🧾 Bill Creator
+              <div className="flex items-center justify-center gap-2">
+                <Receipt size={18} />
+                Bill Creator
+              </div>
             </button>
           </nav>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="main-content">
         {activeSection === "job" ? (
-          <>
-            <div className="tab-switcher">
-              <button
-                className={`tab-btn ${activeTab === "form" ? "active" : ""}`}
-                onClick={() => setActiveTab("form")}
-              >
-                <span>📝</span> Form
-              </button>
-              <button
-                className={`tab-btn ${activeTab === "preview" ? "active" : ""}`}
-                onClick={() => setActiveTab("preview")}
-              >
-                <span>👁️</span> Preview
-              </button>
+          <div>
+            <div className="tab-nav max-w-md mx-auto">
+              <button className={`tab-nav-btn ${activeTab === "form" ? "active" : ""}`} onClick={() => setActiveTab("form")}>Form</button>
+              <button className={`tab-nav-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => setActiveTab("preview")}>Preview</button>
             </div>
 
             <div className="content-grid">
-              <div className={`form-wrapper ${activeTab === "form" ? "active" : ""}`}>
-                <div className="section-header">
-                  <h2>📝 Fill Details</h2>
+              <div className={`form-wrapper glass-card ${activeTab === "form" ? "block" : "hidden lg:block"}`}>
+                <div className="section-title">
+                  <Briefcase size={20} />
+                  <h2>Fill Details</h2>
                 </div>
                 <JobLetterForm formData={formData} onChange={setFormData} />
-                <div className="action-buttons">
-                  <button className="btn btn-secondary" onClick={handleReset}>
-                    <span>🔄</span> Reset Form
-                  </button>
-                  <button className="btn btn-primary" onClick={handleGeneratePDF}>
-                    <span>📥</span> Download PDF
-                  </button>
+                <div className="flex gap-4 mt-8">
+                  <button className="btn btn-secondary flex-1" onClick={handleReset}>Reset</button>
+                  <button className="btn btn-primary flex-1" onClick={handleGeneratePDF}>Download PDF</button>
                 </div>
               </div>
 
-              <div className={`preview-wrapper ${activeTab === "preview" ? "active" : ""}`}>
-                <div className="section-header">
-                  <h2>👁️ Live Preview</h2>
+              <div className={`preview-wrapper glass-card ${activeTab === "preview" ? "block" : "hidden lg:block"}`}>
+                <div className="section-title">
+                  <Sparkles size={20} />
+                  <h2>Live Preview</h2>
                 </div>
                 <LetterPreview data={formData} />
-                <div className="mobile-download">
-                  <button className="btn btn-primary" onClick={handleGeneratePDF}>
-                    <span>📥</span> Download PDF
-                  </button>
-                </div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
           <BillCreator 
             data={billData} 
@@ -112,8 +106,8 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="app-footer">
-        <p>Jewellery Wala Tools - Professional Solutions</p>
+      <footer className="app-footer border-t border-white/5 mt-12 py-8 text-center text-slate-500 text-sm">
+        <p>&copy; 2026 Jewellery Wala. Crafted with premium design.</p>
       </footer>
     </div>
   );

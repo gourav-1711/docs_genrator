@@ -1,15 +1,10 @@
 export interface JobLetterData {
-  // Company Information
   companyName: string;
   companyAddress: string;
   companyEmail: string;
-
-  // Employee Information
   employeeName: string;
   employeeAddress: string;
   position: string;
-
-  // Job Details
   joiningDate: string;
   monthlySalary: number;
   workingHoursDescription: string;
@@ -27,7 +22,10 @@ export interface BillData {
   date: string;
   customerName: string;
   customerAddress: string;
+  customerEmail?: string;
+  customerPhone?: string;
   items: Array<{
+    productName: string;
     description: string;
     quantity: number;
     price: number;
@@ -37,6 +35,10 @@ export interface BillData {
     address: string;
     phones: string[];
     email: string;
+  };
+  settings: {
+    twoInOne: boolean;
+    template: 'jewellery' | 'ecommerce';
   };
 }
 
@@ -64,11 +66,17 @@ export const defaultBillData: BillData = {
   date: new Date().toISOString().split('T')[0],
   customerName: "",
   customerAddress: "",
-  items: [{ description: "", quantity: 1, price: 0 }],
+  customerEmail: "",
+  customerPhone: "",
+  items: [{ productName: "", description: "", quantity: 1, price: 0 }],
   shopDetails: {
     name: "JEWELLERY WALA",
     address: "Jhalamand Circle, Jodhpur",
     phones: ["8094681299", "9460343208"],
     email: "jewellerywalaonline@gmail.com",
+  },
+  settings: {
+    twoInOne: false,
+    template: 'jewellery',
   },
 };
