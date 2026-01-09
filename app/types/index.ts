@@ -32,6 +32,7 @@ export interface BillDetails {
   customerEmail?: string;
   customerPhone?: string;
   items: BillItem[];
+  deliveryCharge: number;
 }
 
 export interface BillData extends BillDetails {
@@ -45,6 +46,7 @@ export interface BillData extends BillDetails {
     twoInOne: boolean;
     template: "jewellery" | "ecommerce";
     mode: "duplicate" | "distinct";
+    classicColor: "red" | "yellow";
   };
   secondBill?: BillDetails;
 }
@@ -80,6 +82,7 @@ export const defaultBillData: BillData = {
   customerEmail: "",
   customerPhone: "",
   items: defaultItems,
+  deliveryCharge: 0,
   shopDetails: {
     name: "JEWELLERY WALA",
     address: "Jhalamand Circle, Jodhpur",
@@ -90,6 +93,7 @@ export const defaultBillData: BillData = {
     twoInOne: false,
     template: "jewellery",
     mode: "duplicate",
+    classicColor: "red",
   },
   secondBill: {
     billNo: "1901",
@@ -99,5 +103,6 @@ export const defaultBillData: BillData = {
     customerEmail: "",
     customerPhone: "",
     items: [{ productName: "", description: "", quantity: 1, price: 0 }],
+    deliveryCharge: 0,
   },
 };

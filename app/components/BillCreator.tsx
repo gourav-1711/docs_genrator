@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { BillData } from "../types";
@@ -132,6 +132,46 @@ export default function BillCreator({
                     <option value="ecommerce">Modern E-commerce</option>
                   </select>
                 </div>
+                {data.settings.template === "jewellery" && (
+                  <div className="form-group full-width">
+                    <label>Color Theme</label>
+                    <div className="flex gap-4 mt-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="classicColor"
+                          style={{ width: "auto" }}
+                          checked={
+                            data.settings.classicColor === "red" ||
+                            !data.settings.classicColor
+                          }
+                          onChange={() =>
+                            handleSettingsChange("classicColor", "red")
+                          }
+                        />
+                        <span className="flex items-center gap-1">
+                          <span className="w-4 h-4 rounded-full bg-red-600 inline-block border border-white/20"></span>
+                          Red
+                        </span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="classicColor"
+                          style={{ width: "auto" }}
+                          checked={data.settings.classicColor === "yellow"}
+                          onChange={() =>
+                            handleSettingsChange("classicColor", "yellow")
+                          }
+                        />
+                        <span className="flex items-center gap-1">
+                          <span className="w-4 h-4 rounded-full bg-yellow-500 inline-block border border-white/20"></span>
+                          Yellow/Gold
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                )}
                 <div className="form-group">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -182,32 +222,31 @@ export default function BillCreator({
               </div>
             </section>
 
-            {data.settings.twoInOne && data.settings.mode === "distinct" && (
-              <div className="flex gap-2 mb-6 px-1">
-                <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeBillTab === "bill1"
-                      ? "bg-amber-500 text-black"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
-                  onClick={() => setActiveBillTab("bill1")}
-                >
-                  Bill 1
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeBillTab === "bill2"
-                      ? "bg-amber-500 text-black"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
-                  onClick={() => setActiveBillTab("bill2")}
-                >
-                  Bill 2
-                </button>
-              </div>
-            )}
-
             <section className="form-section">
+              {data.settings.twoInOne && data.settings.mode === "distinct" && (
+                <div className="grid grid-cols-2 gap-2 mb-10 px-1">
+                  <button
+                    className={`px-8 py-2 rounded-lg font-medium transition-colors ${
+                      activeBillTab === "bill1"
+                        ? "bg-amber-500 text-black"
+                        : "bg-white/10 hover:bg-white/20"
+                    }`}
+                    onClick={() => setActiveBillTab("bill1")}
+                  >
+                    Bill 1
+                  </button>
+                  <button
+                    className={`px-8 py-2 rounded-lg font-medium transition-colors ${
+                      activeBillTab === "bill2"
+                        ? "bg-amber-500 text-black"
+                        : "bg-white/10 hover:bg-white/20"
+                    }`}
+                    onClick={() => setActiveBillTab("bill2")}
+                  >
+                    Bill 2
+                  </button>
+                </div>
+              )}
               <h3 className="section-title">Customer Details</h3>
               <div className="form-grid">
                 <div className="form-group">
@@ -316,6 +355,21 @@ export default function BillCreator({
               <button className="btn btn-secondary w-full" onClick={addItem}>
                 <Plus size={18} /> Add Product
               </button>
+
+              <div className="form-group mt-4">
+                <label>Delivery Charge (â‚¹)</label>
+                <input
+                  type="number"
+                  value={currentBill.deliveryCharge || 0}
+                  onChange={(e) =>
+                    handleBillChange(
+                      "deliveryCharge",
+                      parseInt(e.target.value) || 0
+                    )
+                  }
+                  placeholder="0"
+                />
+              </div>
             </section>
           </div>
           <div className="mt-8">
@@ -335,7 +389,7 @@ export default function BillCreator({
             <h2>Live Preview</h2>
           </div>
           <div
-            className="bill-preview bg-white rounded-lg p-10 text-black shadow-2xl overflow-hidden relative"
+            className="bill-preview bg-white rounded-lg  text-black shadow-2xl overflow-hidden relative"
             style={{
               minHeight: "842px",
               width: "100%",
@@ -346,91 +400,76 @@ export default function BillCreator({
             }}
           >
             {data.settings.template === "ecommerce" ? (
-              <div className="ecommerce-template">
-                <div className="flex justify-between border-b-4 border-slate-900 pb-8">
+              <div className="ecommerce-template p-6">
+                {/* Header with dark background */}
+                <div className="bg-slate-900 -mx-6 -mt-6 px-6 py-5 mb-6 flex justify-between items-start">
                   <div>
-                    <h1 className="text-5xl font-black text-slate-900 uppercase tracking-tighter">
-                      INVOICE
-                    </h1>
-                    <p className="text-slate-500 font-bold text-lg mt-2">
-                      No. {currentBill.billNo}
+                    <h2 className="text-xl font-bold text-white">
+                      {data.shopDetails.name}
+                    </h2>
+                    <p className="text-xs text-amber-400 mt-1">
+                      {data.shopDetails.address}
+                    </p>
+                    <p className="text-xs text-amber-400">
+                      Tel: {data.shopDetails.phones.join(" | ")}
                     </p>
                   </div>
                   <div className="text-right">
-                    <h2 className="text-2xl font-black text-slate-900">
-                      {data.shopDetails.name}
-                    </h2>
-                    <p className="text-sm text-slate-500 font-medium">
-                      {data.shopDetails.address}
+                    <h1 className="text-2xl font-bold text-amber-400">
+                      INVOICE
+                    </h1>
+                    <p className="text-sm text-white mt-1">
+                      #{currentBill.billNo}
                     </p>
-                    <p className="text-sm text-slate-500 font-medium">
-                      Ph: {data.shopDetails.phones.join(", ")}
-                    </p>
-                    <p className="text-sm text-slate-500 font-medium">
-                      {data.shopDetails.email}
+                    <p className="text-xs text-white">
+                      Date: {currentBill.date}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-12 grid grid-cols-2 gap-12">
-                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">
-                      Customer Details
-                    </h3>
-                    <p className="font-black text-xl text-slate-900">
-                      {currentBill.customerName || "Customer Name"}
-                    </p>
-                    <p className="text-sm text-slate-600 mt-1 font-medium">
-                      {currentBill.customerAddress || "Customer Address"}
-                    </p>
-                    <div className="mt-3 flex flex-col gap-1">
-                      <p className="text-sm font-bold text-slate-700">
-                        {currentBill.customerPhone}
-                      </p>
-                      <p className="text-sm font-bold text-slate-700">
-                        {currentBill.customerEmail}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right flex flex-col justify-center">
-                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">
-                      Invoice Date
-                    </h3>
-                    <p className="font-black text-xl text-slate-900">
-                      {currentBill.date}
-                    </p>
-                  </div>
+                {/* Bill To section */}
+                <div className="mb-6">
+                  <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 border-b-2 border-amber-400 pb-1 inline-block">
+                    Bill To:
+                  </h3>
+                  <p className="font-bold text-base text-slate-900">
+                    {currentBill.customerName || "â€”"}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {currentBill.customerAddress}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {currentBill.customerPhone}
+                  </p>
                 </div>
 
-                <div className="mt-12">
+                {/* Items Table */}
+                <div className="mb-6">
                   <table className="w-full text-left">
                     <thead>
-                      <tr className="border-b-2 border-slate-900 text-xs font-black uppercase text-slate-900 tracking-wider">
-                        <th className="pb-4 px-2">Item Description</th>
-                        <th className="pb-4 text-center w-24">Qty</th>
-                        <th className="pb-4 text-right w-32">Price</th>
-                        <th className="pb-4 text-right w-32">Total</th>
+                      <tr className="bg-slate-100 text-xs font-bold uppercase text-slate-900">
+                        <th className="py-2 px-2">Product</th>
+                        <th className="py-2 text-center w-16">Qty</th>
+                        <th className="py-2 text-right w-24">Price</th>
+                        <th className="py-2 text-right w-24">Total</th>
                       </tr>
                     </thead>
-                    <tbody className="text-base">
+                    <tbody className="text-sm">
                       {currentBill.items.map((item, i) => (
-                        <tr key={i} className="border-b border-slate-100 group">
-                          <td className="py-6 px-2">
-                            <p className="font-black text-slate-900 text-lg">
-                              {item.productName || "Product Name"}
-                            </p>
-                            <p className="text-sm text-slate-500 font-medium mt-1">
-                              {item.description || "No description provided"}
+                        <tr key={i} className="border-b border-slate-100">
+                          <td className="py-3 px-2">
+                            <p className="font-bold text-slate-900">
+                              {item.productName || "â€”"}
                             </p>
                           </td>
-                          <td className="py-6 text-center font-bold text-slate-700">
+                          <td className="py-3 text-center text-slate-600">
                             {item.quantity}
                           </td>
-                          <td className="py-6 text-right font-bold text-slate-700">
-                            ₹{item.price.toLocaleString()}
+                          <td className="py-3 text-right text-slate-600">
+                            â‚¹{item.price.toLocaleString()}
                           </td>
-                          <td className="py-6 text-right font-black text-slate-900">
-                            ₹{(item.quantity * item.price).toLocaleString()}
+                          <td className="py-3 text-right font-bold text-slate-900">
+                            â‚¹{(item.quantity * item.price).toLocaleString()}
                           </td>
                         </tr>
                       ))}
@@ -438,12 +477,13 @@ export default function BillCreator({
                   </table>
                 </div>
 
-                <div className="mt-12 flex justify-end">
-                  <div className="w-full max-w-[300px]">
-                    <div className="flex justify-between items-center py-2 text-slate-500 font-bold border-b border-slate-100">
-                      <span>Subtotal</span>
+                {/* Totals */}
+                <div className="flex justify-end">
+                  <div className="w-48">
+                    <div className="flex justify-between text-xs text-slate-500 py-1">
+                      <span>Subtotal:</span>
                       <span>
-                        ₹
+                        â‚¹
                         {currentBill.items
                           .reduce(
                             (acc, item) => acc + item.quantity * item.price,
@@ -452,59 +492,108 @@ export default function BillCreator({
                           .toLocaleString()}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center pt-6">
-                      <span className="text-slate-400 font-black uppercase text-xs tracking-widest">
-                        Amount Due
+                    {(currentBill.deliveryCharge || 0) > 0 && (
+                      <div className="flex justify-between text-xs text-slate-500 py-1">
+                        <span>Delivery:</span>
+                        <span>
+                          â‚¹{(currentBill.deliveryCharge || 0).toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    <div className="bg-slate-900 -mx-2 px-2 py-2 mt-2 flex justify-between items-center rounded">
+                      <span className="text-xs text-white font-bold">
+                        TOTAL
                       </span>
-                      <span className="text-4xl font-black text-slate-900">
-                        ₹
-                        {currentBill.items
-                          .reduce(
+                      <span className="text-lg font-bold text-amber-400">
+                        â‚¹
+                        {(
+                          currentBill.items.reduce(
                             (acc, item) => acc + item.quantity * item.price,
                             0
-                          )
-                          .toLocaleString()}
+                          ) + (currentBill.deliveryCharge || 0)
+                        ).toLocaleString()}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-24 pt-12 border-t border-slate-100">
-                  <div className="flex justify-between items-end">
-                    <div className="text-slate-400 text-xs font-bold uppercase tracking-widest">
-                      <p>Thank you for your business</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="h-16 w-48 border-b-2 border-slate-900 mb-2 ml-auto"></div>
-                      <p className="text-xs font-black text-slate-900 uppercase tracking-widest">
-                        Authorized Signature
-                      </p>
-                    </div>
+                {/* Footer */}
+                <div className="mt-12 pt-4 border-t border-slate-200 flex justify-between items-end">
+                  <p className="text-xs text-slate-400 italic">
+                    Thank you for your business!
+                  </p>
+                  <div className="text-right">
+                    <div className="h-10 w-32 border-b border-slate-300 mb-1"></div>
+                    <p className="text-xs font-bold text-slate-600">
+                      Authorized Signature
+                    </p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="jewellery-template text-[#c00]">
+              <div
+                className="jewellery-template"
+                style={{
+                  color:
+                    data.settings.classicColor === "yellow"
+                      ? "#b08c32"
+                      : "#c00",
+                  ["--theme-color" as any]:
+                    data.settings.classicColor === "yellow"
+                      ? "#b08c32"
+                      : "#c00",
+                  ["--theme-color-light" as any]:
+                    data.settings.classicColor === "yellow"
+                      ? "rgba(176, 140, 50, 0.1)"
+                      : "rgba(200, 0, 0, 0.1)",
+                }}
+              >
                 <div className="flex justify-between text-sm font-bold">
                   <span>Mo. {data.shopDetails.phones[0]}</span>
                   <span>Mo. {data.shopDetails.phones[1]}</span>
                 </div>
-                <div className="text-center border-b-2 border-[#c00] pb-6 mb-8 mt-4">
+                <div
+                  className="text-center pb-6 mb-8 mt-4"
+                  style={{
+                    borderBottom: `2px solid ${
+                      data.settings.classicColor === "yellow"
+                        ? "#b08c32"
+                        : "#c00"
+                    }`,
+                  }}
+                >
                   <div className="text-xs font-black tracking-widest mb-1">
-                    JAI SHREE SHYAM
+                    à¥¥ JAI SHREE SHYAM à¥¥
                   </div>
                   <h1 className="text-6xl font-black tracking-tighter uppercase">
                     {data.shopDetails.name}
                   </h1>
-                  <div className="bg-[#c00] text-white px-6 py-2 inline-block rounded-full text-sm font-black mt-4 uppercase tracking-wider">
-                    All Type Gold & Silver Jewellery Seller
+                  <div
+                    className="text-white px-6 py-2 inline-block rounded-full text-sm font-black mt-4 uppercase tracking-wider"
+                    style={{
+                      backgroundColor:
+                        data.settings.classicColor === "yellow"
+                          ? "#b08c32"
+                          : "#c00",
+                    }}
+                  >
+                    âœ¦ Gold & Silver Jewellery Experts âœ¦
                   </div>
                   <div className="mt-4 text-lg italic font-bold">
-                    Add: {data.shopDetails.address}
+                    ðŸ“ {data.shopDetails.address}
                   </div>
                 </div>
 
-                <div className="flex justify-between font-black text-xl mb-8 border-b border-[#c00]/20 pb-4">
+                <div
+                  className="flex justify-between font-black text-xl mb-8 pb-4"
+                  style={{
+                    borderBottom: `1px solid ${
+                      data.settings.classicColor === "yellow"
+                        ? "rgba(176, 140, 50, 0.2)"
+                        : "rgba(200, 0, 0, 0.2)"
+                    }`,
+                  }}
+                >
                   <span>
                     Bill No.{" "}
                     <span className="text-black">{currentBill.billNo}</span>
@@ -517,13 +606,31 @@ export default function BillCreator({
                 <div className="space-y-8 text-2xl font-bold">
                   <div className="flex items-end gap-4">
                     <span className="shrink-0 mb-1">Mr./Ms.</span>
-                    <span className="border-b-2 border-dotted border-[#c00] flex-1 pb-1 text-black min-h-[40px] px-2">
+                    <span
+                      className="flex-1 pb-1 text-black min-h-[40px] px-2"
+                      style={{
+                        borderBottom: `2px dotted ${
+                          data.settings.classicColor === "yellow"
+                            ? "#b08c32"
+                            : "#c00"
+                        }`,
+                      }}
+                    >
                       {currentBill.customerName}
                     </span>
                   </div>
                   <div className="flex items-end gap-4">
                     <span className="shrink-0 mb-1">Add.</span>
-                    <span className="border-b-2 border-dotted border-[#c00] flex-1 pb-1 text-black min-h-[40px] px-2">
+                    <span
+                      className="flex-1 pb-1 text-black min-h-[40px] px-2"
+                      style={{
+                        borderBottom: `2px dotted ${
+                          data.settings.classicColor === "yellow"
+                            ? "#b08c32"
+                            : "#c00"
+                        }`,
+                      }}
+                    >
                       {currentBill.customerAddress}
                     </span>
                   </div>
@@ -532,7 +639,25 @@ export default function BillCreator({
                 <div className="mt-12">
                   <table className="w-full border-collapse">
                     <thead>
-                      <tr className="border-y-2 border-[#c00] bg-[#c00]/5 text-sm font-black">
+                      <tr
+                        className="text-sm font-black"
+                        style={{
+                          borderTop: `2px solid ${
+                            data.settings.classicColor === "yellow"
+                              ? "#b08c32"
+                              : "#c00"
+                          }`,
+                          borderBottom: `2px solid ${
+                            data.settings.classicColor === "yellow"
+                              ? "#b08c32"
+                              : "#c00"
+                          }`,
+                          backgroundColor:
+                            data.settings.classicColor === "yellow"
+                              ? "rgba(176, 140, 50, 0.05)"
+                              : "rgba(200, 0, 0, 0.05)",
+                        }}
+                      >
                         <th className="py-3 px-2 text-left">Description</th>
                         <th className="py-3 px-2 text-center w-24">Qty</th>
                         <th className="py-3 px-2 text-right w-40">Amount</th>
@@ -540,7 +665,16 @@ export default function BillCreator({
                     </thead>
                     <tbody className="text-xl">
                       {currentBill.items.map((item, i) => (
-                        <tr key={i} className="border-b border-[#c00]/10">
+                        <tr
+                          key={i}
+                          style={{
+                            borderBottom: `1px solid ${
+                              data.settings.classicColor === "yellow"
+                                ? "rgba(176, 140, 50, 0.1)"
+                                : "rgba(200, 0, 0, 0.1)"
+                            }`,
+                          }}
+                        >
                           <td className="py-6 px-2">
                             <p className="font-black text-black">
                               {item.productName}
@@ -553,13 +687,54 @@ export default function BillCreator({
                             {item.quantity}
                           </td>
                           <td className="py-6 px-2 text-right text-black font-black">
-                            ₹{(item.quantity * item.price).toLocaleString()}
+                            â‚¹{(item.quantity * item.price).toLocaleString()}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot>
-                      <tr className="border-t-2 border-[#c00]">
+                      {(currentBill.deliveryCharge || 0) > 0 && (
+                        <tr>
+                          <td
+                            colSpan={2}
+                            className="py-2 text-right text-sm px-4"
+                          >
+                            Subtotal
+                          </td>
+                          <td className="py-2 text-right font-bold text-lg px-2">
+                            â‚¹
+                            {currentBill.items
+                              .reduce(
+                                (acc, item) => acc + item.quantity * item.price,
+                                0
+                              )
+                              .toLocaleString()}
+                          </td>
+                        </tr>
+                      )}
+                      {(currentBill.deliveryCharge || 0) > 0 && (
+                        <tr>
+                          <td
+                            colSpan={2}
+                            className="py-2 text-right text-sm px-4"
+                          >
+                            Delivery
+                          </td>
+                          <td className="py-2 text-right font-bold text-lg px-2">
+                            â‚¹
+                            {(currentBill.deliveryCharge || 0).toLocaleString()}
+                          </td>
+                        </tr>
+                      )}
+                      <tr
+                        style={{
+                          borderTop: `2px solid ${
+                            data.settings.classicColor === "yellow"
+                              ? "#b08c32"
+                              : "#c00"
+                          }`,
+                        }}
+                      >
                         <td
                           colSpan={2}
                           className="py-6 text-right font-black uppercase text-sm px-4"
@@ -567,13 +742,13 @@ export default function BillCreator({
                           Grand Total
                         </td>
                         <td className="py-6 text-right font-black text-3xl px-2">
-                          ₹
-                          {currentBill.items
-                            .reduce(
+                          â‚¹
+                          {(
+                            currentBill.items.reduce(
                               (acc, item) => acc + item.quantity * item.price,
                               0
-                            )
-                            .toLocaleString()}
+                            ) + (currentBill.deliveryCharge || 0)
+                          ).toLocaleString()}
                         </td>
                       </tr>
                     </tfoot>
@@ -589,7 +764,16 @@ export default function BillCreator({
                     <p className="text-2xl font-black mb-12 uppercase">
                       {data.shopDetails.name}
                     </p>
-                    <div className="w-64 border-t-2 border-[#c00] mx-auto"></div>
+                    <div
+                      className="w-64 mx-auto"
+                      style={{
+                        borderTop: `2px solid ${
+                          data.settings.classicColor === "yellow"
+                            ? "#b08c32"
+                            : "#c00"
+                        }`,
+                      }}
+                    ></div>
                     <p className="text-xs font-black mt-2 uppercase tracking-widest">
                       Authorized Signature
                     </p>
