@@ -17,19 +17,24 @@ export interface JobLetterData {
   additionalTasks: string;
 }
 
-export interface BillData {
+export interface BillItem {
+  productName: string;
+  description: string;
+  quantity: number;
+  price: number;
+}
+
+export interface BillDetails {
   billNo: string;
   date: string;
   customerName: string;
   customerAddress: string;
   customerEmail?: string;
   customerPhone?: string;
-  items: Array<{
-    productName: string;
-    description: string;
-    quantity: number;
-    price: number;
-  }>;
+  items: BillItem[];
+}
+
+export interface BillData extends BillDetails {
   shopDetails: {
     name: string;
     address: string;
@@ -38,8 +43,10 @@ export interface BillData {
   };
   settings: {
     twoInOne: boolean;
-    template: 'jewellery' | 'ecommerce';
+    template: "jewellery" | "ecommerce";
+    mode: "duplicate" | "distinct";
   };
+  secondBill?: BillDetails;
 }
 
 export const defaultFormData: JobLetterData = {
@@ -61,14 +68,18 @@ export const defaultFormData: JobLetterData = {
   additionalTasks: "",
 };
 
+const defaultItems: BillItem[] = [
+  { productName: "", description: "", quantity: 1, price: 0 },
+];
+
 export const defaultBillData: BillData = {
   billNo: "1900",
-  date: new Date().toISOString().split('T')[0],
+  date: new Date().toISOString().split("T")[0],
   customerName: "",
   customerAddress: "",
   customerEmail: "",
   customerPhone: "",
-  items: [{ productName: "", description: "", quantity: 1, price: 0 }],
+  items: defaultItems,
   shopDetails: {
     name: "JEWELLERY WALA",
     address: "Jhalamand Circle, Jodhpur",
@@ -77,6 +88,16 @@ export const defaultBillData: BillData = {
   },
   settings: {
     twoInOne: false,
-    template: 'jewellery',
+    template: "jewellery",
+    mode: "duplicate",
+  },
+  secondBill: {
+    billNo: "1901",
+    date: new Date().toISOString().split("T")[0],
+    customerName: "",
+    customerAddress: "",
+    customerEmail: "",
+    customerPhone: "",
+    items: [{ productName: "", description: "", quantity: 1, price: 0 }],
   },
 };
