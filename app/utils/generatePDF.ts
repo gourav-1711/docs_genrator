@@ -54,7 +54,7 @@ export function generateBillPDF(data: BillData): void {
         billHeight,
         pageWidth,
         margin,
-        contentWidth
+        contentWidth,
       );
     } else {
       const colorTheme = classicColors[data.settings.classicColor || "red"];
@@ -67,7 +67,7 @@ export function generateBillPDF(data: BillData): void {
         pageWidth,
         margin,
         contentWidth,
-        colorTheme
+        colorTheme,
       );
     }
   };
@@ -94,7 +94,7 @@ function drawEcommerceBill(
   billHeight: number,
   pageWidth: number,
   margin: number,
-  contentWidth: number
+  contentWidth: number,
 ): void {
   const colors = ecommerceColors;
 
@@ -107,7 +107,7 @@ function drawEcommerceBill(
   doc.setDrawColor(
     colors.lightGray[0],
     colors.lightGray[1],
-    colors.lightGray[2]
+    colors.lightGray[2],
   );
   doc.setLineWidth(0.3);
   doc.rect(margin + 2, yOffset + 2, contentWidth - 4, billHeight - 4);
@@ -130,7 +130,7 @@ function drawEcommerceBill(
   doc.text(
     "Tel: " + data.shopDetails.phones.join(" | "),
     margin + 10,
-    yOffset + 26
+    yOffset + 26,
   );
 
   // Invoice label (right side in header) - GOLD text
@@ -175,7 +175,7 @@ function drawEcommerceBill(
   doc.setTextColor(
     colors.mediumGray[0],
     colors.mediumGray[1],
-    colors.mediumGray[2]
+    colors.mediumGray[2],
   );
   doc.text(billData.customerAddress || "", margin + 10, billToY + 14);
   doc.text(billData.customerPhone || "", margin + 10, billToY + 19);
@@ -185,7 +185,7 @@ function drawEcommerceBill(
   doc.setFillColor(
     colors.lightGray[0],
     colors.lightGray[1],
-    colors.lightGray[2]
+    colors.lightGray[2],
   );
   doc.rect(margin + 5, tableHeaderY - 4, contentWidth - 10, 8, "F");
 
@@ -220,7 +220,7 @@ function drawEcommerceBill(
     doc.setTextColor(
       colors.mediumGray[0],
       colors.mediumGray[1],
-      colors.mediumGray[2]
+      colors.mediumGray[2],
     );
     doc.text(item.quantity.toString(), margin + 105, itemY, {
       align: "center",
@@ -238,7 +238,7 @@ function drawEcommerceBill(
       "Rs. " + (item.quantity * item.price).toLocaleString(),
       pageWidth - margin - 15,
       itemY,
-      { align: "right" }
+      { align: "right" },
     );
 
     itemY += rowHeight;
@@ -247,7 +247,7 @@ function drawEcommerceBill(
   // Subtotal and delivery calculations
   const subtotal = billData.items.reduce(
     (acc, item) => acc + item.quantity * item.price,
-    0
+    0,
   );
   const deliveryCharge = billData.deliveryCharge || 0;
   const grandTotal = subtotal + deliveryCharge;
@@ -261,14 +261,14 @@ function drawEcommerceBill(
     pageWidth - margin - 80,
     totalY - 8,
     pageWidth - margin - 10,
-    totalY - 8
+    totalY - 8,
   );
 
   // Subtotal row
   doc.setTextColor(
     colors.mediumGray[0],
     colors.mediumGray[1],
-    colors.mediumGray[2]
+    colors.mediumGray[2],
   );
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
@@ -277,7 +277,7 @@ function drawEcommerceBill(
     "Rs. " + subtotal.toLocaleString(),
     pageWidth - margin - 15,
     totalY - 2,
-    { align: "right" }
+    { align: "right" },
   );
 
   // Delivery charge row (if applicable)
@@ -288,7 +288,7 @@ function drawEcommerceBill(
       "Rs. " + deliveryCharge.toLocaleString(),
       pageWidth - margin - 15,
       totalY + 4,
-      { align: "right" }
+      { align: "right" },
     );
     grandTotalY = totalY + 12;
   }
@@ -307,7 +307,7 @@ function drawEcommerceBill(
     "Rs. " + grandTotal.toLocaleString(),
     pageWidth - margin - 15,
     grandTotalY + 6,
-    { align: "right" }
+    { align: "right" },
   );
 
   // Footer
@@ -319,7 +319,7 @@ function drawEcommerceBill(
   doc.setTextColor(
     colors.mediumGray[0],
     colors.mediumGray[1],
-    colors.mediumGray[2]
+    colors.mediumGray[2],
   );
   doc.setFontSize(8);
   doc.setFont("helvetica", "italic");
@@ -344,9 +344,17 @@ function drawClassicJewelleryBill(
   pageWidth: number,
   margin: number,
   contentWidth: number,
-  colorTheme: typeof classicColors.red
+  colorTheme: typeof classicColors.red,
 ): void {
   const { primary, secondary, accent, dark } = colorTheme;
+
+  // Watermark (subtle) - Draw first so it appears in background
+  doc.setTextColor(245, 245, 245);
+  doc.setFontSize(50);
+  doc.setFont("times", "bold");
+  doc.text("JW", pageWidth / 2, yOffset + billHeight / 2 + 10, {
+    align: "center",
+  });
 
   // Decorative double border
   doc.setDrawColor(primary[0], primary[1], primary[2]);
@@ -366,7 +374,7 @@ function drawClassicJewelleryBill(
     yOffset + billHeight - 4,
     primary,
     false,
-    true
+    true,
   );
   drawCornerDecoration(
     doc,
@@ -374,7 +382,7 @@ function drawClassicJewelleryBill(
     yOffset + billHeight - 4,
     primary,
     true,
-    true
+    true,
   );
 
   // Phone numbers at top corners
@@ -386,7 +394,7 @@ function drawClassicJewelleryBill(
     "Ph: " + (data.shopDetails.phones[1] || ""),
     pageWidth - margin - 12,
     yOffset + 12,
-    { align: "right" }
+    { align: "right" },
   );
 
   // Blessing text
@@ -452,13 +460,13 @@ function drawClassicJewelleryBill(
     "Customer: " +
       (billData.customerName || "________________________________"),
     margin + 10,
-    customerY
+    customerY,
   );
   doc.text(
     "Address: " +
       (billData.customerAddress || "________________________________"),
     margin + 10,
-    customerY + 7
+    customerY + 7,
   );
   if (billData.customerPhone) {
     doc.text("Phone: " + billData.customerPhone, margin + 10, customerY + 14);
@@ -518,7 +526,7 @@ function drawClassicJewelleryBill(
       "Rs. " + (item.quantity * item.price).toLocaleString(),
       pageWidth - margin - 15,
       itemY,
-      { align: "right" }
+      { align: "right" },
     );
 
     itemY += item.description ? rowHeight + 2 : rowHeight;
@@ -527,7 +535,7 @@ function drawClassicJewelleryBill(
   // Subtotal and delivery calculations
   const subtotal = billData.items.reduce(
     (acc, item) => acc + item.quantity * item.price,
-    0
+    0,
   );
   const deliveryCharge = billData.deliveryCharge || 0;
   const grandTotal = subtotal + deliveryCharge;
@@ -545,7 +553,7 @@ function drawClassicJewelleryBill(
       "Rs. " + subtotal.toLocaleString(),
       pageWidth - margin - 12,
       totalY,
-      { align: "right" }
+      { align: "right" },
     );
     totalY += 6;
     doc.text("Delivery:", pageWidth - margin - 55, totalY);
@@ -553,7 +561,7 @@ function drawClassicJewelleryBill(
       "Rs. " + deliveryCharge.toLocaleString(),
       pageWidth - margin - 12,
       totalY,
-      { align: "right" }
+      { align: "right" },
     );
     totalY += 6;
   }
@@ -565,7 +573,7 @@ function drawClassicJewelleryBill(
     pageWidth - margin - 80,
     totalY - 2,
     pageWidth - margin - 8,
-    totalY - 2
+    totalY - 2,
   );
 
   doc.setFillColor(secondary[0], secondary[1], secondary[2]);
@@ -580,16 +588,8 @@ function drawClassicJewelleryBill(
     "Rs. " + grandTotal.toLocaleString(),
     pageWidth - margin - 12,
     totalY + 8,
-    { align: "right" }
+    { align: "right" },
   );
-
-  // Watermark (subtle)
-  doc.setTextColor(245, 245, 245);
-  doc.setFontSize(50);
-  doc.setFont("times", "bold");
-  doc.text("JW", pageWidth / 2, yOffset + billHeight / 2 + 10, {
-    align: "center",
-  });
 
   // Signature section
   const signatureY = yOffset + billHeight - 20;
@@ -603,7 +603,7 @@ function drawClassicJewelleryBill(
     pageWidth - margin - 55,
     signatureY + 8,
     pageWidth - margin - 10,
-    signatureY + 8
+    signatureY + 8,
   );
   doc.setFontSize(9);
   doc.text("Authorized Signature", pageWidth - margin - 50, signatureY + 13);
@@ -621,7 +621,7 @@ function drawCornerDecoration(
   y: number,
   color: [number, number, number],
   flipX = false,
-  flipY = false
+  flipY = false,
 ): void {
   const size = 8;
   const xDir = flipX ? -1 : 1;
@@ -693,14 +693,14 @@ export function generateJobLetterPDF(data: JobLetterData): void {
   doc.text(
     "Name: " + (data.employeeName || "_____________________________"),
     leftMargin,
-    currentY
+    currentY,
   );
   doc.setFont("times", "normal");
   currentY += lineHeight;
   doc.text(
     "Address: " + (data.employeeAddress || "_____________________________"),
     leftMargin,
-    currentY
+    currentY,
   );
   currentY += lineHeight * 2;
 
@@ -711,7 +711,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
   doc.text(
     "Subject: Appointment & Joining Confirmation Letter",
     leftMargin,
-    currentY
+    currentY,
   );
 
   // Underline for subject
@@ -730,7 +730,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
       (data.employeeName ? "Mr./Ms. " + data.employeeName : "_______________") +
       ",",
     leftMargin,
-    currentY
+    currentY,
   );
   currentY += lineHeight * 1.5;
 
@@ -757,7 +757,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
   doc.text(
     "You are required to join on " + joiningText + ".",
     leftMargin,
-    currentY
+    currentY,
   );
   currentY += lineHeight;
 
@@ -765,7 +765,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
     doc.text(
       "Additional responsibilities: " + data.additionalTasks,
       leftMargin,
-      currentY
+      currentY,
     );
     currentY += lineHeight;
   }
@@ -784,7 +784,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
   doc.text(
     "Monthly Salary: Rs. " + salaryFormatted + " (" + salaryInWords + ")",
     leftMargin + 5,
-    currentY
+    currentY,
   );
   currentY += lineHeight * 1.5;
 
@@ -804,7 +804,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
       " to " +
       (data.workingHoursTo || "_________"),
     leftMargin + 5,
-    currentY
+    currentY,
   );
   currentY += lineHeight;
   doc.text(
@@ -812,7 +812,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
       (data.weeklyOff1 || "____________") +
       (data.weeklyOff2 ? ", " + data.weeklyOff2 : ""),
     leftMargin + 5,
-    currentY
+    currentY,
   );
   currentY += lineHeight * 1.5;
 
@@ -822,7 +822,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
       (data.probationMonths > 0 ? data.probationMonths.toString() : "_") +
       " month(s) from the date of joining.",
     leftMargin,
-    currentY
+    currentY,
   );
   currentY += lineHeight * 2.5;
 
@@ -843,7 +843,7 @@ export function generateJobLetterPDF(data: JobLetterData): void {
   doc.save(
     data.employeeName
       ? "Job_Letter_" + data.employeeName.replace(/\s+/g, "_") + ".pdf"
-      : "Job_Letter.pdf"
+      : "Job_Letter.pdf",
   );
 }
 
@@ -851,7 +851,7 @@ function drawDecorativeBorder(
   doc: jsPDF,
   pageWidth: number,
   pageHeight: number,
-  margin: number
+  margin: number,
 ): void {
   // Outer gold border
   doc.setDrawColor(180, 160, 100);
@@ -865,7 +865,7 @@ function drawDecorativeBorder(
     margin + 4,
     margin + 4,
     pageWidth - 2 * margin - 8,
-    pageHeight - 2 * margin - 8
+    pageHeight - 2 * margin - 8,
   );
 
   // Corner flourishes
@@ -882,13 +882,13 @@ function drawDecorativeBorder(
     pageWidth - margin - 6,
     margin + cornerSize,
     pageWidth - margin - 6,
-    margin + 6
+    margin + 6,
   );
   doc.line(
     pageWidth - margin - cornerSize,
     margin + 6,
     pageWidth - margin - 6,
-    margin + 6
+    margin + 6,
   );
 
   // Bottom-left corner
@@ -896,13 +896,13 @@ function drawDecorativeBorder(
     margin + 6,
     pageHeight - margin - cornerSize,
     margin + 6,
-    pageHeight - margin - 6
+    pageHeight - margin - 6,
   );
   doc.line(
     margin + 6,
     pageHeight - margin - 6,
     margin + cornerSize,
-    pageHeight - margin - 6
+    pageHeight - margin - 6,
   );
 
   // Bottom-right corner
@@ -910,13 +910,13 @@ function drawDecorativeBorder(
     pageWidth - margin - 6,
     pageHeight - margin - cornerSize,
     pageWidth - margin - 6,
-    pageHeight - margin - 6
+    pageHeight - margin - 6,
   );
   doc.line(
     pageWidth - margin - cornerSize,
     pageHeight - margin - 6,
     pageWidth - margin - 6,
-    pageHeight - margin - 6
+    pageHeight - margin - 6,
   );
 
   // Corner diamonds
