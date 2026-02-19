@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useStore, JobLetterData, defaultFormData } from "@/app/store/useStore";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,7 +39,7 @@ const steps = [
   { id: 3, label: "Preview", sub: "Review & Download" },
 ];
 
-export default function JobLetterPage() {
+function JobLetterPageContent() {
   const { companyDetails, addDocument, updateDocument, getDocument } =
     useStore();
   const router = useRouter();
@@ -870,5 +870,13 @@ export default function JobLetterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function JobLetterPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="text-white">Loading...</div></div>}>
+      <JobLetterPageContent />
+    </Suspense>
   );
 }
