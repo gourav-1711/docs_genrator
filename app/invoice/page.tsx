@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useStore, BillData, defaultBillData } from "@/app/store/useStore";
 import { Button } from "@/components/ui/button";
 import { Plus, Save, Eye, Zap, FileText, X } from "lucide-react";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { generateBillPDF } from "@/app/utils/generatePDF";
 
-export default function InvoicePage() {
+function InvoicePageContent() {
   const {
     companyDetails,
     addDocument,
@@ -590,5 +590,13 @@ export default function InvoicePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function InvoicePage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="text-white">Loading...</div></div>}>
+      <InvoicePageContent />
+    </Suspense>
   );
 }
